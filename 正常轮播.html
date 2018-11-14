@@ -131,7 +131,9 @@
   var pic = 0;//全局变量
 
 
-  //创建小按钮
+  // goToSlide(pic);
+
+  //创建小按钮 , 每个按钮注册点击事件
   for (var i = 0; i < list.length; i++) {
     //创建li标签,加入到ol中
     var liObj = document.createElement("li");
@@ -156,7 +158,7 @@
       //获取鼠标进入的li的当前索引值
       pic = this.getAttribute("index");
 
-      console.log(pic);
+      // console.log(pic);
 
       //移动ul
       goToSlide(pic);
@@ -165,8 +167,8 @@
   //设置ol中第一个li有背景颜色
   olObj.children[0].className = "current";
 
-  //克隆一个ul中第一个li,加入到ul中的最后=====克隆
-  ulObj.appendChild(ulObj.children[0].cloneNode(true));
+  // //克隆一个ul中第一个li,加入到ul中的最后=====克隆
+  // ulObj.appendChild(ulObj.children[0].cloneNode(true));
 
 
   // //自动播放
@@ -184,26 +186,28 @@
   };
 
 
-  //右边按钮
-  document.getElementById("right").onclick = clickHandle;
+  $('#right').on('click', function () {
+    goToSlide(++pic)
 
-  function clickHandle() {
-    //如果pic的值是5,恰巧是ul中li的个数-1的值,此时页面显示第六个图片,而用户会认为这是第一个图,
-    //所以,如果用户再次点击按钮,用户应该看到第二个图片
-    if (pic == list.length - 1) {
-      //如何从第6个图,跳转到第一个图
-      pic = 0;//先设置pic=0
-      ulObj.style.left = 0 + "px";//把ul的位置还原成开始的默认位置
-    }
-    pic++;//立刻设置pic加1,那么此时用户就会看到第二个图片了
-    animate(ulObj, -pic * imgWidth);//pic从0的值加1之后,pic的值是1,然后ul移动出去一个图片
-    //如果pic==5说明,此时显示第6个图(内容是第一张图片),第一个小按钮有颜色,
-    if (pic == list.length - 1) {
-      //第五个按钮颜色干掉
-      olObj.children[olObj.children.length - 1].className = "";
-      //第一个按钮颜色设置上
-      olObj.children[0].className = "current";
-    } else {
+  })
+  $('#left').on('click', function () {
+    goToSlide(--pic)
+  })
+
+
+  // document.getElementById("right").onclick = goToSlide(pic + 1);
+  // document.getElementById("left").onclick = goToSlide(pic - 1);
+
+
+  var $slides = $('#slides')
+
+
+  function goToSlide(index) {
+    if (index < list.length && index >= 0) {
+      console.log(index);
+      console.log(pic);
+      $slides.css({transform: `translateX(${-index * 500}px)`})
+
       //干掉所有的小按钮的背景颜色
       for (var i = 0; i < olObj.children.length; i++) {
         olObj.children[i].removeAttribute("class");
@@ -211,33 +215,6 @@
       olObj.children[pic].className = "current";
     }
 
-  };
-
-
-  //左边按钮
-  document.getElementById("left").onclick = function () {
-    if (pic == 0) {
-      pic = 5;
-      ulObj.style.left = -pic * imgWidth + "px";
-    }
-    pic--;
-    animate(ulObj, -pic * imgWidth);
-    //设置小按钮的颜色---所有的小按钮干掉颜色
-    for (var i = 0; i < olObj.children.length; i++) {
-      olObj.children[i].removeAttribute("class");
-    }
-    //当前的pic索引对应的按钮设置颜色
-    olObj.children[pic].className = "current";
-
-  };
-
-
-  var $slides = $('#slides')
-
-
-  function goToSlide(index) {
-
-    $slides.css({transform: `translateX(${-index * 500}px)`})
 
   }
 
