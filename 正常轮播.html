@@ -117,8 +117,6 @@
   var box = document.getElementById("box");
   //获取相框
   var screen = box.children[0];
-  //获取相框的宽度
-  var imgWidth = screen.offsetWidth;
   //获取ul
   var ulObj = screen.children[0];
   //获取ul中的所有的li
@@ -189,9 +187,12 @@
   $('#right').on('click', function () {
     goToSlide(++pic)
 
+
   })
   $('#left').on('click', function () {
     goToSlide(--pic)
+
+
   })
 
 
@@ -203,19 +204,29 @@
 
 
   function goToSlide(index) {
+    console.log(pic);
     if (index < list.length && index >= 0) {
-      console.log(index);
-      console.log(pic);
       $slides.css({transform: `translateX(${-index * 500}px)`})
+      setButtonColor(index)
 
-      //干掉所有的小按钮的背景颜色
-      for (var i = 0; i < olObj.children.length; i++) {
-        olObj.children[i].removeAttribute("class");
-      }
-      olObj.children[pic].className = "current";
+    } else if (index === list.length) {
+      pic = 0
+      $slides.css({transform: `translateX(${0}px)`})
+      setButtonColor(0)
+    } else if (index === -1) {
+      pic = list.length - 1
+      $slides.css({transform: `translateX(${-(list.length - 1) * 500}px)`})
+      setButtonColor(list.length - 1)
     }
 
+  }
 
+  function setButtonColor(index) {
+    //干掉所有的小按钮的背景颜色
+    for (var i = 0; i < olObj.children.length; i++) {
+      olObj.children[i].removeAttribute("class");
+    }
+    olObj.children[index].className = "current";
   }
 
 
